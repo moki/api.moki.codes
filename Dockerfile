@@ -1,4 +1,5 @@
 FROM scratch
-ADD www.google.com.crt /etc/ssl/certs/
+ADD certificates/server.crt /server.crt
+ADD certificates/server.key /server.key
 ADD server.out /
 CMD ["/server.out"]

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  backend:
+    container_name: api.moki.codes
+    build: .
+    ports:
+      - 4000:80
+    restart: on-failure
+    networks:
+      - api
+
+networks:
+  api:
