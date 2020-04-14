@@ -17,3 +17,6 @@
 # Certificates
 certificates/
 *.crt
+
+# Environment provisioning
+*.env
