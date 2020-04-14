@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/moki/api.moki.codes/dotenv"
 )
@@ -19,8 +20,18 @@ func base(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", base)
 	r := dotenv.NewReaderT(".env")
 	r.Read()
-	log.Fatal(http.ListenAndServeTLS(":80", "server.crt", "server.key", nil))
+
+	http.HandleFunc("/", base)
+
+	port := os.Getenv("BACKEND_CONTAINER_PORT")
+	log.Fatal(
+		http.ListenAndServeTLS(
+			":"+port,
+			"server.crt",
+			"server.key",
+			nil,
+		))
+
 }

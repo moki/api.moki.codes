@@ -4,10 +4,27 @@ services:
     container_name: api.moki.codes
     build: .
     ports:
-      - 4000:80
-    restart: on-failure
-    networks:
-      - api
+      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
+    restart: always
+    depends_on:
+      - redis
+#    networks:
+#      - api
 
-networks:
-  api:
+  redis:
+    container_name: api.moki.codes_database
+    build:
+      context: .
+      dockerfile: Dockerfile-redis
+    ports:
+      - ${REDIS_HOST_PORT}:${REDIS_CONTAINER_PORT}
+    volumes:
+      - redis-data:/data
+#    networks:
+#      - api
+
+volumes:
+  redis-data:
+
+#networks:
+#  api:

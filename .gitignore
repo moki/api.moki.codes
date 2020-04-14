@@ -20,3 +20,6 @@ certificates/
 
 # Environment provisioning
 *.env
+
+# Redis configuration
+redis.conf
