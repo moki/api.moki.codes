@@ -9,6 +9,14 @@ make build
 docker-compose up --build
 ```
 
+endpoints
+--------------------------------------------------------------------------------
+
+| req method <br> req path <br> parameters | res data type <br> res status code | description |
+| --- | --- | --- |
+| GET <br> / <br> &nbsp; | 200 <br> { endpoints: string[] } <br> &nbsp; | Get available api endpoints |
+| POST <br> /newsletter/subscribe <br> { email: string, name: string } | 201 <br> null <br> &nbsp; | Subscribe to the newsletter |
+
 license
 --------------------------------------------------------------------------------
 BSD 3-Clause License

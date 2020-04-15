@@ -1,6 +1,5 @@
 FROM scratch
-ADD certificates/server.crt /server.crt
-ADD certificates/server.key /server.key
+ADD certificates /certificates
 ADD .env /
 ADD server.out /
 CMD ["/server.out"]
