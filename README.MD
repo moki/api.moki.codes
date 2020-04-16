@@ -12,10 +12,10 @@ docker-compose up --build
 endpoints
 --------------------------------------------------------------------------------
 
-| req method <br> req path <br> parameters | res data type <br> res status code | description |
+| req method <br> req path <br> parameters | res status code <br> res data type | description |
 | --- | --- | --- |
 | GET <br> / <br> &nbsp; | 200 <br> { endpoints: string[] } <br> &nbsp; | Get available api endpoints |
-| POST <br> /newsletter/subscribe <br> { email: string, name: string } | 201 <br> null <br> &nbsp; | Subscribe to the newsletter |
+| POST <br> /newsletter/subscribers <br> { email: string, name: string } | success: <br> 201 <br> 201: Created <br><br> failure: <br> 400 <br> 400: invalid email \| name <br><br> 409 <br> 409: Conflict | Subscribe to the newsletter |
 
 license
 --------------------------------------------------------------------------------

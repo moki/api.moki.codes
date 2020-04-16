@@ -1,6 +1,6 @@
 package api
 
 func (api *API) routes() {
-	api.Router.HandleFunc("/newsletter/subscribe", api.subscribe())
-	api.Router.HandleFunc("/", api.base())
+	api.Router.HandleFunc("/newsletter/subscribers", api.setCORS(api.subscribers(), "*"))
+	api.Router.HandleFunc("/", api.setCORS(api.base(), "*"))
 }

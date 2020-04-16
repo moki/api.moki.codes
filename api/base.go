@@ -7,7 +7,7 @@ import (
 )
 
 func endpoints() []string {
-	return []string{"/", "/newsletter/subscribe"}
+	return []string{"/", "/newsletter/subscribers"}
 }
 
 func (api *API) base() http.HandlerFunc {
@@ -19,6 +19,7 @@ func (api *API) base() http.HandlerFunc {
 		if r.Method != http.MethodGet {
 			w.Header().Set("Allow", http.MethodGet)
 			http.Error(w, http.StatusText(405), 405)
+			return
 		}
 		resp := Response{endpoints()}
 		encoded, err := json.Marshal(resp)
