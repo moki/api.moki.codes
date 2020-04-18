@@ -36,8 +36,8 @@ func main() {
 	log.Fatal(
 		http.ListenAndServeTLS(
 			":"+apiPort,
-			"certificates/_server.crt",
-			"certificates/_server.key",
+			"certificates/server.crt",
+			"certificates/server.key",
 			api.Router,
 		))
 }

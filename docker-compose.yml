@@ -18,6 +18,7 @@ services:
       dockerfile: Dockerfile-redis
     ports:
       - ${REDIS_HOST_PORT}:${REDIS_CONTAINER_PORT}
+    restart: always
     volumes:
       - redis-data:/data
 #    networks:

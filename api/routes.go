@@ -1,6 +1,9 @@
 package api
 
 func (api *API) routes() {
-	api.Router.HandleFunc("/newsletter/subscribers", api.setCORS(api.subscribers(), "*"))
-	api.Router.HandleFunc("/", api.setCORS(api.base(), "*"))
+	ipextractor := NewIPExtractorT()
+	api.Router.HandleFunc("/newsletter/subscribers",
+		api.ratelimit(ipextractor, 20, api.setCORS("*", api.subscribers())))
+	api.Router.HandleFunc("/",
+		api.ratelimit(ipextractor, 20, api.setCORS("*", api.base())))
 }
