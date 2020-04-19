@@ -3,7 +3,10 @@ package api
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"net/smtp"
+	"strings"
 
 	"github.com/dlclark/regexp2"
 	"github.com/gomodule/redigo/redis"
@@ -20,7 +23,6 @@ func (api *API) subscribers() http.HandlerFunc {
 		}
 		return doesmatch
 	}
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			w.Header().Set("Allow", http.MethodGet)
@@ -29,12 +31,55 @@ func (api *API) subscribers() http.HandlerFunc {
 		}
 		email := r.PostFormValue("email")
 		if email == "" || len(email) > 254 || !rgxmch(email, emailChecker) {
-			http.Error(w, http.StatusText(400)+": invalid email", 400)
+			http.Error(w, http.StatusText(400)+", invalid email", 400)
 			return
 		}
 		name := r.PostFormValue("name")
 		if name == "" || len(name) > 30 || !rgxmch(name, nameChecker) {
-			http.Error(w, http.StatusText(400)+": invalid name", 400)
+			http.Error(w, http.StatusText(400)+", invalid name", 400)
+			return
+		}
+
+		fromemail := "email@check.com"
+		atidx := strings.LastIndexByte(email, '@')
+		host := email[atidx+1:]
+		account := email[:atidx]
+		emailExists := false
+		mxs, err := net.LookupMX(host)
+		if err != nil || len(mxs) == 0 {
+			http.Error(w, http.StatusText(400)+", invalid email", 400)
+			return
+		}
+		for _, mx := range mxs {
+			client, err := smtp.Dial(mx.Host + ":smtp")
+			if err != nil {
+				goto nextmx
+			}
+			err = client.Hello(account)
+			if err != nil {
+				goto nextmx
+			}
+			err = client.Mail(fromemail)
+			if err != nil {
+				goto nextmx
+			}
+			err = client.Rcpt(email)
+			if err != nil {
+				goto nextmx
+			}
+			emailExists = true
+		nextmx:
+			err = client.Close()
+			if err != nil {
+				http.Error(w, http.StatusText(500), 500)
+				return
+			}
+			if emailExists {
+				break
+			}
+		}
+		if !emailExists {
+			http.Error(w, http.StatusText(400)+", invalid email", 400)
 			return
 		}
 
