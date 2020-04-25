@@ -3,29 +3,37 @@ services:
   backend:
     container_name: api.moki.codes
     build: .
-    ports:
-      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
-    restart: always
+    expose:
+      - ${BACKEND_CONTAINER_PORT}
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - VIRTUAL_PORT=${VIRTUAL_PORT}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    restart: unless-stopped
     depends_on:
       - redis
-#    networks:
-#      - api
-
+    networks:
+      - proxy
+      - api
   redis:
     container_name: api.moki.codes_database
     build:
       context: .
       dockerfile: Dockerfile-redis
-    ports:
-      - ${REDIS_HOST_PORT}:${REDIS_CONTAINER_PORT}
-    restart: always
+    expose:
+      - ${REDIS_CONTAINER_PORT}
+    restart: unless-stopped
     volumes:
       - redis-data:/data
-#    networks:
-#      - api
+    networks:
+      - api
 
 volumes:
   redis-data:
 
-#networks:
-#  api:
+networks:
+  proxy:
+    external:
+      name: nginx-proxy
+  api:
