@@ -29,12 +29,12 @@ func (api *API) subscribers() http.HandlerFunc {
 			http.Error(w, http.StatusText(405), 405)
 			return
 		}
-		email := r.PostFormValue("email")
+		email := strings.ToLower(r.PostFormValue("email"))
 		if email == "" || len(email) > 254 || !rgxmch(email, emailChecker) {
 			http.Error(w, http.StatusText(400)+", invalid email", 400)
 			return
 		}
-		name := r.PostFormValue("name")
+		name := strings.ToLower(r.PostFormValue("name"))
 		if name == "" || len(name) > 30 || !rgxmch(name, nameChecker) {
 			http.Error(w, http.StatusText(400)+", invalid name", 400)
 			return

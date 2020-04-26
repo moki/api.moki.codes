@@ -5,6 +5,8 @@ services:
     build: .
     expose:
       - ${BACKEND_CONTAINER_PORT}
+#   ports:
+#     - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
     environment:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
       - VIRTUAL_PORT=${VIRTUAL_PORT}
@@ -21,8 +23,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-redis
-    expose:
-      - ${REDIS_CONTAINER_PORT}
+#    expose:
+#      - ${REDIS_CONTAINER_PORT}
+    ports:
+      - ${REDIS_HOST_PORT}:${REDIS_CONTAINER_PORT}
     restart: unless-stopped
     volumes:
       - redis-data:/data
